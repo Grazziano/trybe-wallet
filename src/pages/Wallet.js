@@ -1,16 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { userExpenses } from '../actions';
+import PropTypes from 'prop-types';
+import { returnCurrenciesApi } from '../actions';
 import Header from '../components/Header';
-// import currencyApi from '../services/currencyApi';
 
 class Wallet extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      expenses: [],
-      currencies: [],
       price: '',
       description: '',
       currency: '',
@@ -20,32 +18,31 @@ class Wallet extends React.Component {
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
-    // this.getCurrencyApi = this.getCurrencyApi.bind(this);
+    this.getApiCurrencies = this.getApiCurrencies.bind(this);
   }
 
-  // async componentDidMount() {
-  // this.getCurrencyApi();
-  // const { currencies } = this.state;
-  // console.log(currencies);
-  // }
+  componentDidMount() {
+    this.getApiCurrencies();
+  }
+
+  async getApiCurrencies() {
+    const { addCurrencies } = this.props;
+    await addCurrencies();
+    // const result = await addCurrencies();
+    // this.setState({ currencies: result });
+  }
 
   handleChange(event) {
     const { name, value } = event.target;
     this.setState({ [name]: value });
   }
 
-  // async getCurrencyApi() {
-  //   const result = await currencyApi();
-  //   const data = await result.code;
-  //   this.setState({
-  //     currencies: [...data],
-  //   });
-  // }
-
   handleSubmit() {}
 
   render() {
     const { price, description, currency, method, tag } = this.state;
+    const { currencies } = this.props;
+    console.log(currencies);
     return (
       <div>
         <Header />
@@ -57,6 +54,7 @@ class Wallet extends React.Component {
             data-testid="value-input"
             name="price"
             id="price"
+            value={ price }
             onChange={ this.handleChange }
           />
         </label>
@@ -68,6 +66,7 @@ class Wallet extends React.Component {
             data-testid="description-input"
             name="description"
             id="description"
+            value={ description }
             onChange={ this.handleChange }
           />
         </label>
@@ -79,10 +78,25 @@ class Wallet extends React.Component {
             data-testid="currency-input"
             name="currency"
             id="currency"
+            value={ currency }
             onChange={ this.handleChange }
           >
             <option value="">Escolha uma moeda</option>
-            <option value="BRL">BRL</option>
+            {
+              (
+                Object.values(currencies)
+                  .filter((e) => (e.name !== 'Dólar Americano/Real Brasileiro Turismo'))
+                  .map((cur) => (
+                    <option
+                      key={ cur.code }
+                      data-testid={ cur.code }
+                      value={ cur.code }
+                    >
+                      { cur.code }
+                    </option>
+                  ))
+              )
+            }
           </select>
         </label>
 
@@ -93,6 +107,7 @@ class Wallet extends React.Component {
             data-testid="method-input"
             name="method"
             id="method"
+            value={ method }
             onChange={ this.handleChange }
           >
             <option value="">Escolha um método de pagamento</option>
@@ -109,6 +124,7 @@ class Wallet extends React.Component {
             data-testid="tag-input"
             name="tag"
             id="tag"
+            value={ tag }
             onChange={ this.handleChange }
           >
             <option value="">Escolha uma categoria</option>
@@ -131,7 +147,24 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  expensesDispatch: (currencies) => dispatch(userExpenses(currencies)),
+  addCurrencies: () => dispatch(returnCurrenciesApi()),
 });
+
+Wallet.propTypes = {
+  addCurrencies: PropTypes.func.isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.shape({
+    ask: PropTypes.string.isRequired,
+    bid: PropTypes.string.isRequired,
+    code: PropTypes.string.isRequired,
+    codein: PropTypes.string.isRequired,
+    create_date: PropTypes.string.isRequired,
+    high: PropTypes.string.isRequired,
+    low: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    pctChange: PropTypes.string.isRequired,
+    timestamp: PropTypes.string.isRequired,
+    varBid: PropTypes.string.isRequired,
+  })).isRequired,
+};
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

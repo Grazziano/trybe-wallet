@@ -10,18 +10,16 @@ const userLogin = (email) => ({
   email,
 });
 
-const getCurrencies = (data) => ({
+const getCurrencies = (currencies) => ({
   type: GET_CURRENCIES,
-  currencies: data,
+  data: currencies,
 });
 
-const fetchCurrencies = () => {
-  const fetch = async (dispatch) => {
+const returnCurrenciesApi = () => (
+  async (dispatch) => {
     const result = await currencyApi();
     return dispatch(getCurrencies(result));
-  };
-  return fetch;
-};
+  });
 
 const userExpenses = (value) => ({
   type: USER_EXPENSES,
@@ -34,6 +32,6 @@ export {
   USER_EXPENSES,
   userLogin,
   getCurrencies,
-  fetchCurrencies,
+  returnCurrenciesApi,
   userExpenses,
 };

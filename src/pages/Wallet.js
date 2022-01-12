@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { returnCurrenciesApi } from '../actions';
 import Header from '../components/Header';
+import TableExpenses from '../components/TableExpenses';
 
 class Wallet extends React.Component {
   constructor(props) {
@@ -137,6 +138,8 @@ class Wallet extends React.Component {
         </label>
 
         <button type="submit">Adicionar despesa</button>
+
+        <TableExpenses />
       </div>
     );
   }

@@ -21,15 +21,9 @@ const returnCurrenciesApi = () => (
     return dispatch(getCurrencies(result));
   });
 
-const addExpenses = (payload) => ({
+const addExpenses = (data) => ({
   type: USER_ADD_EXPENSES,
-  payload: {
-    price: payload.price,
-    description: payload.description,
-    currency: payload.currency,
-    method: payload.method,
-    tag: payload.tag,
-  },
+  data,
 });
 
 export {

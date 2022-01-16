@@ -4,18 +4,24 @@ import { GET_CURRENCIES, USER_ADD_EXPENSES } from '../actions';
 const INITIAL_STATE = {
   currencies: [],
   expenses: [],
-  price: '',
-  description: '',
-  currency: '',
-  method: '',
-  tag: '',
 };
+
+const lastId = (array) => array.reduce((acc, cur) => Math.max(acc, cur.id), 0);
 
 const wallet = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case USER_ADD_EXPENSES:
     // return { ...state, expenses: [...state.expenses, action.expenses] };
-    return action.payload;
+    return {
+      ...state,
+      expenses: [
+        ...state.expenses,
+        {
+          id: state.expenses.length > 0 ? lastId([...state.expenses]) + 1 : 0,
+          ...action.data,
+        },
+      ],
+    };
   case GET_CURRENCIES:
     return { ...state, currencies: action.data };
   default:

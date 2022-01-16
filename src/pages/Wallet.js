@@ -10,15 +10,15 @@ class Wallet extends React.Component {
     super(props);
 
     this.state = {
-      // id: 0,
       price: '',
       description: '',
       currency: '',
       method: '',
       tag: '',
+      // exchangeRate: {},
     };
 
-    // this.submitForm = this.submitForm.bind(this);
+    this.submitForm = this.submitForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getApiCurrencies = this.getApiCurrencies.bind(this);
   }
@@ -39,16 +39,18 @@ class Wallet extends React.Component {
     this.setState({ [name]: value });
   }
 
-  // submitForm() {
-  //   const { id, price, description, currency, method, tag } = this.state;
-  //   const { addExpensesDispatch } = this.props;
-  //   addExpensesDispatch(this.state);
-  // }
+  async submitForm() {
+    const { price, description, currency, method, tag } = this.state;
+    const { addExpensesDispatch } = this.props;
+    const getRates = await this.getApiCurrencies();
+    console.log(getRates);
+    addExpensesDispatch({ price, description, currency, method, tag });
+  }
 
   render() {
     const { price, description, currency, method, tag } = this.state;
-    const { currencies, addExpensesDispatch } = this.props;
-    // console.log(currencies);
+    const { currencies } = this.props;
+    console.log(currencies);
     return (
       <div>
         <Header />
@@ -144,7 +146,8 @@ class Wallet extends React.Component {
         <button
           type="button"
           onClick={
-            () => addExpensesDispatch({ price, description, currency, method, tag })
+            // () => addExpensesDispatch({ price, description, currency, method, tag, exchangeRate })
+            this.submitForm
           }
         >
           Adicionar despesa

@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { returnCurrenciesApi } from '../actions';
+import { addExpenses, returnCurrenciesApi } from '../actions';
 import Header from '../components/Header';
 import TableExpenses from '../components/TableExpenses';
 
@@ -10,6 +10,7 @@ class Wallet extends React.Component {
     super(props);
 
     this.state = {
+      // id: 0,
       price: '',
       description: '',
       currency: '',
@@ -17,7 +18,7 @@ class Wallet extends React.Component {
       tag: '',
     };
 
-    this.handleSubmit = this.handleSubmit.bind(this);
+    // this.submitForm = this.submitForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.getApiCurrencies = this.getApiCurrencies.bind(this);
   }
@@ -38,12 +39,16 @@ class Wallet extends React.Component {
     this.setState({ [name]: value });
   }
 
-  handleSubmit() {}
+  // submitForm() {
+  //   const { id, price, description, currency, method, tag } = this.state;
+  //   const { addExpensesDispatch } = this.props;
+  //   addExpensesDispatch(this.state);
+  // }
 
   render() {
     const { price, description, currency, method, tag } = this.state;
-    const { currencies } = this.props;
-    console.log(currencies);
+    const { currencies, addExpensesDispatch } = this.props;
+    // console.log(currencies);
     return (
       <div>
         <Header />
@@ -82,18 +87,17 @@ class Wallet extends React.Component {
             value={ currency }
             onChange={ this.handleChange }
           >
-            <option value="">Escolha uma moeda</option>
             {
               (
-                Object.values(currencies)
-                  .filter((e) => (e.name !== 'Dólar Americano/Real Brasileiro Turismo'))
-                  .map((cur) => (
+                Object.keys(currencies)
+                  .filter((e) => (e !== 'USDT'))
+                  .map((cur, index) => (
                     <option
-                      key={ cur.code }
-                      data-testid={ cur.code }
-                      value={ cur.code }
+                      key={ cur + index }
+                      data-testid={ cur }
+                      value={ cur }
                     >
-                      { cur.code }
+                      { cur }
                     </option>
                   ))
               )
@@ -137,7 +141,14 @@ class Wallet extends React.Component {
           </select>
         </label>
 
-        <button type="submit">Adicionar despesa</button>
+        <button
+          type="button"
+          onClick={
+            () => addExpensesDispatch({ price, description, currency, method, tag })
+          }
+        >
+          Adicionar despesa
+        </button>
 
         <TableExpenses />
       </div>
@@ -147,27 +158,18 @@ class Wallet extends React.Component {
 
 const mapStateToProps = (state) => ({
   currencies: state.wallet.currencies,
+  expenses: state.wallet.expenses,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   addCurrencies: () => dispatch(returnCurrenciesApi()),
+  addExpensesDispatch: (data) => dispatch(addExpenses(data)),
 });
 
 Wallet.propTypes = {
   addCurrencies: PropTypes.func.isRequired,
-  currencies: PropTypes.arrayOf(PropTypes.shape({
-    ask: PropTypes.string.isRequired,
-    bid: PropTypes.string.isRequired,
-    code: PropTypes.string.isRequired,
-    codein: PropTypes.string.isRequired,
-    create_date: PropTypes.string.isRequired,
-    high: PropTypes.string.isRequired,
-    low: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    pctChange: PropTypes.string.isRequired,
-    timestamp: PropTypes.string.isRequired,
-    varBid: PropTypes.string.isRequired,
-  })).isRequired,
+  addExpensesDispatch: PropTypes.func.isRequired,
+  currencies: PropTypes.arrayOf(PropTypes.shape([])).isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

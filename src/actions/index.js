@@ -3,7 +3,7 @@ import currencyApi from '../services/currencyApi';
 
 const USER_LOGIN = 'USER_LOGIN';
 const GET_CURRENCIES = 'GET_CURRENCIES';
-const USER_EXPENSES = 'USER_EXPENSES';
+const USER_ADD_EXPENSES = 'USER_ADD_EXPENSES';
 
 const userLogin = (email) => ({
   type: USER_LOGIN,
@@ -21,17 +21,23 @@ const returnCurrenciesApi = () => (
     return dispatch(getCurrencies(result));
   });
 
-const userExpenses = (value) => ({
-  type: USER_EXPENSES,
-  value,
+const addExpenses = (payload) => ({
+  type: USER_ADD_EXPENSES,
+  payload: {
+    price: payload.price,
+    description: payload.description,
+    currency: payload.currency,
+    method: payload.method,
+    tag: payload.tag,
+  },
 });
 
 export {
   USER_LOGIN,
   GET_CURRENCIES,
-  USER_EXPENSES,
+  USER_ADD_EXPENSES,
   userLogin,
   getCurrencies,
   returnCurrenciesApi,
-  userExpenses,
+  addExpenses,
 };

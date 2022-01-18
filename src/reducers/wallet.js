@@ -6,21 +6,24 @@ const INITIAL_STATE = {
   expenses: [],
 };
 
-const lastId = (array) => array.reduce((acc, cur) => Math.max(acc, cur.id), 0);
+// const lastId = (array) => array.reduce((acc, cur) => Math.max(acc, cur.id), 0);
 
 const wallet = (state = INITIAL_STATE, action) => {
   switch (action.type) {
   case USER_ADD_EXPENSES:
-    // return { ...state, expenses: [...state.expenses, action.expenses] };
+    // return {
+    //   ...state,
+    //   expenses: [
+    //     ...state.expenses,
+    //     {
+    //       id: state.expenses.length > 0 ? lastId([...state.expenses]) + 1 : 0,
+    //       ...action.data,
+    //     },
+    //   ],
+    // };
     return {
       ...state,
-      expenses: [
-        ...state.expenses,
-        {
-          id: state.expenses.length > 0 ? lastId([...state.expenses]) + 1 : 0,
-          ...action.data,
-        },
-      ],
+      expenses: [...state.expenses, action.payload],
     };
   case GET_CURRENCIES:
     return { ...state, currencies: action.data };

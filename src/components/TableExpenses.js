@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import TableItem from './TableItem';
 
 class TableExpenses extends Component {
   render() {
@@ -24,10 +25,16 @@ class TableExpenses extends Component {
           </thead>
           <tbody>
             {
+              expenses.map((expense) => (
+                <TableItem key={ expense.id } { ...expense } />
+              ))
+            }
+            {/* {
               Object.keys(expenses).map((expense) => {
                 const {
                   id,
                   description,
+                  currency,
                   price,
                   method,
                   tag,
@@ -40,7 +47,7 @@ class TableExpenses extends Component {
                     <td>{ tag }</td>
                     <td>{ method }</td>
                     <td>{ price }</td>
-                    <td>{ description }</td>
+                    <td>{ currency }</td>
                     <td>{ description }</td>
                     <td>{ description }</td>
                     <td>Real</td>
@@ -61,7 +68,7 @@ class TableExpenses extends Component {
                   </tr>
                 );
               })
-            }
+            } */}
           </tbody>
         </table>
       </div>

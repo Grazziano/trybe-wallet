@@ -21,10 +21,21 @@ const returnCurrenciesApi = () => (
     return dispatch(getCurrencies(result));
   });
 
-const addExpenses = (data) => ({
-  type: USER_ADD_EXPENSES,
-  data,
-});
+// const addExpenses = (data) => ({
+//   type: USER_ADD_EXPENSES,
+//   data,
+// });
+
+const addExpenses = (payload) => async (dispatch) => {
+  const currencies = await currencyApi();
+  dispatch({
+    type: USER_ADD_EXPENSES,
+    payload: {
+      ...payload,
+      exchangeRates: currencies,
+    },
+  });
+};
 
 export {
   USER_LOGIN,
